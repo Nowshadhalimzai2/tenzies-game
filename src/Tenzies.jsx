@@ -120,7 +120,7 @@ const Tenzies = () => {
     });
   };
   return (
-    <div className="h-full w-full rounded-lg bg-white flex flex-col justify-center items-center p-6  mx-auto">
+    <div className="h-full w-full rounded-lg bg-white flex flex-col justify-center md:space-y-4 space-y-8 items-center md:p-6 p-2 mx-auto">
       {gameWon && (
         <div className="absolute top-0 left-0 w-full h-full z-10">
           <Confetti
@@ -155,11 +155,11 @@ const Tenzies = () => {
         {gameWon && "You won the game!"}
       </div>
 
-      <div className="grid mt-8 gap-y-2 grid-cols-5 gap-x-4">
+      <div className="grid mt-8 gap-y-2 grid-cols-5 gap-x-2 w-[90%] md:w-[80%]">
         {diceElements}
       </div>
       <button
-        className={`text-white px-6 py-2 rounded mt-4   ${
+        className={`text-white px-6 py-2 rounded md:mt-4 mt-12  ${
           gameOver ? "bg-gray-500" : "bg-blue-500 hover:bg-blue-600"
         }`}
         onClick={rollDice}
