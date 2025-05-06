@@ -3,9 +3,10 @@ import Die from "./Die";
 import Confetti from "react-confetti";
 const Tenzies = () => {
   const [dice, setDice] = React.useState(() => generateNewDie());
+  const [gameWon, setGameWon] = React.useState(false);
   const [gameOver, setGameOver] = React.useState(false);
   const newGameRef = React.useRef(null);
-
+  const [attempt, setAttempt] = React.useState(() => 5);
   React.useEffect(() => {
     if (gameOver) {
       newGameRef.current.focus();
@@ -15,12 +16,12 @@ const Tenzies = () => {
   function generateNewDie() {
     return new Array(10).fill(0).map((_, index) => ({
       id: index + 1,
-      value: Math.ceil(Math.random() * 6),
+      value: 5, // Math.ceil(Math.random() * 6),
       isHeld: false,
     }));
   }
   const rollDice = () => {
-    if (!gameOver) {
+    if (!gameOver && !gameWon) {
       audio.load(); // Preload the audio
       diceSound();
       setDice(
@@ -28,10 +29,13 @@ const Tenzies = () => {
           !die.isHeld ? { ...die, value: Math.ceil(Math.random() * 6) } : die
         )
       );
+      setAttempt((prevAttempt) => prevAttempt - 1);
+      if (attempt < 1) {
+        setGameOver(true);
+      }
     } else {
       // Reset the game state
-      setGameOver(false);
-      setDice(generateNewDie());
+      resetGame();
     }
   };
   const audio = React.useMemo(() => {
@@ -47,7 +51,12 @@ const Tenzies = () => {
       audio.currentTime = 5; // Reset to start time
     }, 800); // Stops after 3 seconds
   };
-
+  function resetGame() {
+    setDice(generateNewDie());
+    setGameWon(false);
+    setGameOver(false);
+    setAttempt(5);
+  }
   const handleHeld = (id) => {
     // Handle the logic for holding a die here
     setDice((prevDice) =>
@@ -61,12 +70,26 @@ const Tenzies = () => {
     const firstValue = dice[0].value;
     const allSameValue = dice.every((die) => die.value === firstValue);
     if (allHeld && allSameValue) {
+      setGameWon(true);
+      // desable all dice buttons after winning
+      document.querySelectorAll(".die").forEach((die) => {
+        die.disabled = true;
+      });
+    }
+    if (attempt < 1) {
       setGameOver(true);
+      // desable all dice buttons after losing
+      document.querySelectorAll(".die").forEach((die) => {
+        die.disabled = true;
+      });
     }
   };
+  console.log(gameOver, gameWon);
+
   React.useEffect(() => {
     checkWin();
   }, [dice]);
+
   const diceElements = dice.map((die) => (
     <Die
       key={die.id}
@@ -78,7 +101,7 @@ const Tenzies = () => {
 
   return (
     <div className="h-full w-full rounded-lg bg-white flex flex-col justify-center items-center p-6  mx-auto">
-      {gameOver && (
+      {gameWon && (
         <div className="absolute top-0 left-0 w-full h-full z-10">
           <Confetti
             width={window.innerWidth}
@@ -89,22 +112,28 @@ const Tenzies = () => {
           />
         </div>
       )}
-      {gameOver && (
-        <div aria-live="assertive" className="sr-only">
-          Congratulation! You won the match
-        </div>
-      )}
+
       <img
         src="https://cdn-icons-png.flaticon.com/512/1040/1040204.png"
         alt="dice"
         className="w-16 h-16 mb-4"
       />
 
-      <h1 className="text-4xl font-bold text-center mb-4">Tenzies</h1>
+      <h1 className="text-4xl font-bold text-center mb-4">Tenzies {attempt}</h1>
       <p className="text-gray-600 mb-4 text-center">
-        Roll until all dice are the same. Click each die to freeze it at its
-        current value between rolls.
+        {!gameOver ? (
+          "Roll until all dice are the same. Click each die to freeze it at its current value between rolls."
+        ) : (
+          <span className="text-red-500">
+            "Game Over! You have no more attempts left. Please click{" "}
+            <strong>New Game</strong> to start again."
+          </span>
+        )}
       </p>
+      <div className="text-green-500 font-bold text-2xl">
+        {gameWon && "You won the game!"}
+      </div>
+
       <div className="grid mt-8 gap-y-2 grid-cols-5 gap-x-4">
         {diceElements}
       </div>
@@ -115,7 +144,7 @@ const Tenzies = () => {
         onClick={rollDice}
         ref={newGameRef}
       >
-        {!gameOver ? "Roll" : "New Game"}
+        {gameOver || gameWon ? "New Game" : "Roll"}
       </button>
     </div>
   );

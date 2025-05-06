@@ -4,7 +4,7 @@ const Die = (props) => {
   return (
     // "w-12 h-12 bg-white rounded-md shadow-lg flex items-center justify-center text-2xl text-gray-700"
     <button
-      className={`w-16 h-16  rounded-md shadow-md inset-2 font-bold flex items-center justify-center text-2xl text-gray-700 border-0 p-0 ${
+      className={`die w-16 h-16  rounded-md shadow-md inset-2 font-bold flex items-center justify-center text-2xl text-gray-700 border-0 p-0 ${
         props.isHeld ? "bg-green-500" : "bg-white"
       }`}
       onClick={props.onClick}
