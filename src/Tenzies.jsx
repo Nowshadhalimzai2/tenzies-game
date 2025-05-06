@@ -38,6 +38,14 @@ const Tenzies = () => {
       resetGame();
     }
   };
+  const winAudio = React.useMemo(() => {
+    const sound = new Audio("/winSound.wav");
+    sound.currentTime = 5; // Preload and set start time
+    return sound;
+  }, []);
+  const winSound = () => {
+    winAudio.play();
+  };
   const audio = React.useMemo(() => {
     const sound = new Audio("/diceSound.mp3");
     sound.currentTime = 5; // Preload and set start time
@@ -52,11 +60,17 @@ const Tenzies = () => {
     }, 800); // Stops after 3 seconds
   };
   function resetGame() {
+    // if game is over, reset the game state
     setDice(generateNewDie());
     setGameWon(false);
     setGameOver(false);
     setAttempt(5);
+    //if game is reset, stop the sound
+    audio.pause(); // Stop playback
+    winAudio.pause(); // Stop playback
+    setButtonAbled(false);
   }
+
   const handleHeld = (id) => {
     // Handle the logic for holding a die here
     setDice((prevDice) =>
@@ -65,23 +79,25 @@ const Tenzies = () => {
       )
     );
   };
+  // Check if all dice are held and have the same value
+  // If so, set gameWon to true
   const checkWin = () => {
     const allHeld = dice.every((die) => die.isHeld);
     const firstValue = dice[0].value;
     const allSameValue = dice.every((die) => die.value === firstValue);
     if (allHeld && allSameValue) {
+      // Play the win sound
+      winAudio.load(); // Preload the audio
+      winSound();
       setGameWon(true);
+      newGameRef.current.focus(); // Focus on the button after winning
       // desable all dice buttons after winning
-      document.querySelectorAll(".die").forEach((die) => {
-        die.disabled = true;
-      });
+      setButtonAbled(true);
     }
     if (attempt < 1) {
       setGameOver(true);
       // desable all dice buttons after losing
-      document.querySelectorAll(".die").forEach((die) => {
-        die.disabled = true;
-      });
+      setButtonAbled(true);
     }
   };
   console.log(gameOver, gameWon);
@@ -98,7 +114,11 @@ const Tenzies = () => {
       onClick={() => handleHeld(die.id)}
     />
   ));
-
+  const setButtonAbled = (isAbled) => {
+    document.querySelectorAll(".die").forEach((die) => {
+      die.disabled = isAbled;
+    });
+  };
   return (
     <div className="h-full w-full rounded-lg bg-white flex flex-col justify-center items-center p-6  mx-auto">
       {gameWon && (
