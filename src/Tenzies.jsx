@@ -16,7 +16,7 @@ const Tenzies = () => {
   function generateNewDie() {
     return new Array(10).fill(0).map((_, index) => ({
       id: index + 1,
-      value: 5, //Math.ceil(Math.random() * 6),
+      value: Math.ceil(Math.random() * 6),
       isHeld: false,
     }));
   }
