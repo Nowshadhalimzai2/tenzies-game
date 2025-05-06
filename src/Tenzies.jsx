@@ -161,7 +161,7 @@ const Tenzies = () => {
         {diceElements}
       </div>
       <button
-        className={`text-white px-6 py-2 rounded md:mt-4 mt-12  ${
+        className={`text-white px-6 py-2 rounded md:mt-4 mt-12 ${
           gameOver ? "bg-gray-500" : "bg-blue-500 hover:bg-blue-600"
         }`}
         onClick={rollDice}
@@ -169,8 +169,8 @@ const Tenzies = () => {
       >
         {gameOver || gameWon ? "New Game" : "Roll"}
       </button>
-      <div className="flex justify-center items-center text-slate-800 font-bold px-2 py-1 rounded-lg animate-pulse">
-        <small>developed by Nowshad Halimzai</small>
+      <div className="md:flex flex-none justify-center items-center text-slate-800 md:font-bold px-2 py-1 rounded-lg animate-pulse">
+        <small className="text-sm">developed by Nowshad Halimzai</small>
       </div>
     </div>
   );
