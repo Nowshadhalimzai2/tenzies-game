@@ -16,7 +16,7 @@ const Tenzies = () => {
   function generateNewDie() {
     return new Array(10).fill(0).map((_, index) => ({
       id: index + 1,
-      value: Math.ceil(Math.random() * 6),
+      value: 5, //Math.ceil(Math.random() * 6),
       isHeld: false,
     }));
   }
@@ -100,7 +100,6 @@ const Tenzies = () => {
       setButtonAbled(true);
     }
   };
-  console.log(gameOver, gameWon);
 
   React.useEffect(() => {
     checkWin();
@@ -120,9 +119,17 @@ const Tenzies = () => {
     });
   };
   return (
-    <div className="h-full w-full rounded-lg bg-white flex flex-col justify-center space-y-4  items-center md:p-6 p-2 mx-auto">
+    <div
+      className="h-full w-full rounded-lg bg-gray-100 flex flex-col justify-center space-y-4 items-center md:p-6 p-2 mx-auto"
+      role="main"
+      aria-labelledby="game-title"
+    >
       {gameWon && (
-        <div className="absolute top-0 left-0 w-full h-full z-10">
+        <div
+          className="absolute top-0 left-0 w-full h-full z-10"
+          role="alert"
+          aria-live="assertive"
+        >
           <Confetti
             width={window.innerWidth}
             height={window.innerHeight}
@@ -135,43 +142,60 @@ const Tenzies = () => {
 
       <img
         src="https://cdn-icons-png.flaticon.com/512/1040/1040204.png"
-        alt="dice"
+        alt="Dice icon"
         className="w-16 h-16 mb-4"
       />
 
-      <h1 className="md:text-4xl text-xl font-bold text-center text-gray-800">
+      <h1
+        id="game-title"
+        className="md:text-4xl text-xl font-bold text-center text-gray-800"
+      >
         Tenzies
       </h1>
-      <small>{attempt} Attempts Left</small>
+      <small aria-live="polite">{attempt} Attempts Left</small>
       <p className="text-gray-600 mb-4 text-center">
         {!gameOver ? (
           "Roll until all dice are the same. Click each die to freeze it at its current value between rolls."
         ) : (
-          <span className="text-red-500">
-            "Game Over! You have no more attempts left. Please click{" "}
-            <strong>New Game</strong> to start again."
+          <span className="text-red-500" role="alert" aria-live="assertive">
+            Game Over! You have no more attempts left. Please click{" "}
+            <strong>New Game</strong> to start again.
           </span>
         )}
       </p>
-      <div className="text-green-500 font-bold text-2xl">
-        {gameWon && "You won the game!"}
+      <div
+        className="text-green-500 font-bold text-2xl"
+        role="status"
+        aria-live="polite"
+      >
+        {gameWon && (
+          <div>
+            <span>You won the game!</span>
+            <br />
+            <span className="text-gray-800 animate-pulse text-sm">
+              developed by Nowshad Halimzai
+            </span>
+          </div>
+        )}
       </div>
 
-      <div className="grid mt-8 gap-y-2 grid-cols-5 gap-x-2 w-[90%] md:w-[80%]">
+      <div
+        className="grid mt-8 gap-y-2 grid-cols-5 gap-x-2 w-[90%] md:w-[80%]"
+        role="group"
+        aria-label="Dice grid"
+      >
         {diceElements}
       </div>
       <button
         className={`text-white px-6 py-2 rounded md:mt-4 mt-12 ${
-          gameOver ? "bg-gray-500" : "bg-blue-500 hover:bg-blue-600"
+          gameWon ? "bg-gray-500" : "bg-blue-500 hover:bg-blue-700"
         }`}
         onClick={rollDice}
         ref={newGameRef}
+        aria-label={gameOver || gameWon ? "Start a new game" : "Roll the dice"}
       >
         {gameOver || gameWon ? "New Game" : "Roll"}
       </button>
-      <div className="md:flex flex-none justify-center items-center text-slate-800 md:font-bold px-2 py-1 rounded-lg animate-pulse">
-        <small className="text-sm">developed by Nowshad Halimzai</small>
-      </div>
     </div>
   );
 };
