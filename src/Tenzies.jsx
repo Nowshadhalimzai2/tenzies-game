@@ -16,7 +16,7 @@ const Tenzies = () => {
   function generateNewDie() {
     return new Array(10).fill(0).map((_, index) => ({
       id: index + 1,
-      value: 5, // Math.ceil(Math.random() * 6),
+      value: Math.ceil(Math.random() * 6),
       isHeld: false,
     }));
   }
@@ -139,7 +139,8 @@ const Tenzies = () => {
         className="w-16 h-16 mb-4"
       />
 
-      <h1 className="text-4xl font-bold text-center mb-4">Tenzies {attempt}</h1>
+      <h1 className="text-4xl font-bold text-center mb-4">Tenzies</h1>
+      <small>{attempt} Attempts Left</small>
       <p className="text-gray-600 mb-4 text-center">
         {!gameOver ? (
           "Roll until all dice are the same. Click each die to freeze it at its current value between rolls."
