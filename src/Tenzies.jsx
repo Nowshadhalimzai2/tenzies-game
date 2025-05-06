@@ -167,6 +167,9 @@ const Tenzies = () => {
       >
         {gameOver || gameWon ? "New Game" : "Roll"}
       </button>
+      <div className="flex justify-center items-center text-orange-300 px-2 py-1 rounded-lg animate-pulse">
+        <small>developed by Nowshad Halimzai</small>
+      </div>
     </div>
   );
 };
