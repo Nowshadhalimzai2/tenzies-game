@@ -120,7 +120,7 @@ const Tenzies = () => {
     });
   };
   return (
-    <div className="h-full w-full rounded-lg bg-white flex flex-col justify-center md:space-y-4 space-y-8 items-center md:p-6 p-2 mx-auto">
+    <div className="h-full w-full rounded-lg bg-white flex flex-col justify-center space-y-4  items-center md:p-6 p-2 mx-auto">
       {gameWon && (
         <div className="absolute top-0 left-0 w-full h-full z-10">
           <Confetti
@@ -139,7 +139,9 @@ const Tenzies = () => {
         className="w-16 h-16 mb-4"
       />
 
-      <h1 className="text-4xl font-bold text-center mb-4">Tenzies</h1>
+      <h1 className="md:text-4xl text-xl font-bold text-center text-gray-800">
+        Tenzies
+      </h1>
       <small>{attempt} Attempts Left</small>
       <p className="text-gray-600 mb-4 text-center">
         {!gameOver ? (
@@ -167,7 +169,7 @@ const Tenzies = () => {
       >
         {gameOver || gameWon ? "New Game" : "Roll"}
       </button>
-      <div className="flex justify-center items-center text-orange-500 font-bold px-2 py-1 rounded-lg animate-pulse">
+      <div className="flex justify-center items-center text-slate-800 font-bold px-2 py-1 rounded-lg animate-pulse">
         <small>developed by Nowshad Halimzai</small>
       </div>
     </div>
